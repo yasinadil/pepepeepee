@@ -2,26 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.bg-pepe {
+  --tw-bg-opacity: 1;
+  background-color: rgb(99 133 150 / var(--tw-bg-opacity));
+}
+.bg-right {
+  background-position: right;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@keyframes down {
+  0% {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: 100% 100vh;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.animate-down {
+  animation: down 20s linear infinite;
+}
+
+@keyframes up {
+  0% {
+    background-position: 0 100vh;
+  }
+
+  to {
+    background-position: 0 0;
+  }
+}
+
+.animate-up {
+  animation: up 20s linear infinite;
 }
