@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Pepe";
+  src: url("../public/assets/Heyho-Regular.ttf.otf");
+}
+
 .bg-pepe {
   --tw-bg-opacity: 1;
   background-color: rgb(99 133 150 / var(--tw-bg-opacity));
@@ -36,4 +41,23 @@
 
 .animate-up {
   animation: up 20s linear infinite;
+}
+
+.connect-btn {
+  font-family: "Pepe", Arial, Helvetica, sans-serif !important;
+  font-weight: 900;
+  background-color: white !important;
+  color: black !important;
+}
+
+.css-1ugqqba {
+  font-size: 30px !important;
+}
+
+.css-1lg62vy {
+  font-size: 25px !important;
+}
+
+.css-1fs08e3 {
+  font-size: 20px !important;
 }

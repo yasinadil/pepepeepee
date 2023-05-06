@@ -1,10 +1,8 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import ConnectButton from "../public/assets/Button_Connect-Wallet.webp";
 import pepeOrig from "../public/assets/pepe_orig.webp";
 import logo from "../public/assets/Logo_pepe_pee-pee.webp";
-
-const inter = Inter({ subsets: ["latin"] });
+import Mint from "@/components/Mint/Mint";
 
 export default function Home() {
   return (
@@ -45,22 +43,7 @@ export default function Home() {
             loading="lazy"
             style={{ color: "transparent" }}
           />
-          <div id="subtitles" className="mt-4 text-center">
-            <div id="connect" className="mt-5 flex justify-center">
-              <button>
-                <Image
-                  alt="Connect wallet"
-                  src={ConnectButton}
-                  width="225"
-                  height="85"
-                  decoding="async"
-                  data-nimg="1"
-                  loading="lazy"
-                  style={{ color: "transparent" }}
-                />
-              </button>
-            </div>
-          </div>
+          <Mint />
         </div>
       </div>
 
