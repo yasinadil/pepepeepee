@@ -11,6 +11,10 @@ import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { ethers, BigNumber } from "ethers";
+import { nftAddress } from "../Config/Config";
+import { useAccount } from "wagmi";
+const nftABI = require("../ABI/nftABI.json");
 
 const { chains, provider } = configureChains(
   [polygonMumbai],
@@ -30,10 +34,68 @@ const wagmiClient = createClient({
   provider,
 });
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Mint() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
+  const [totalMinted, setTotalMinted] = useState("0");
+  const [minting, setMinting] = useState(false);
+  const [newUser, setNewUser] = useState(false);
+  const { address, isConnected } = useAccount();
+
+  let newUserPrices = new Map([
+    [1, "0"],
+    [2, "0.005"],
+    [3, "0.010"],
+    [4, "0.015"],
+    [5, "0.020"],
+    [6, "0.025"],
+    [7, "0.030"],
+    [8, "0.035"],
+  ]);
+
+  let normalPrices = new Map([
+    [1, "0.005"],
+    [2, "0.010"],
+    [3, "0.015"],
+    [4, "0.020"],
+    [5, "0.025"],
+    [6, "0.030"],
+    [7, "0.035"],
+    [8, "0.040"],
+  ]);
+
+  useEffect(() => {
+    const load = async () => {
+      const provider = new ethers.providers.JsonRpcProvider(
+        process.env.NEXT_PUBLIC_ALCHEMY_LINK!
+      );
+      let contract = new ethers.Contract(nftAddress, nftABI, provider);
+
+      let Minted = await contract.totalSupply();
+      let total = Number(Minted);
+      setTotalMinted(total.toString());
+    };
+    load();
+  }, []);
+
+  useEffect(() => {
+    if (isConnected && address) {
+      const price = async () => {
+        const provider = new ethers.providers.Web3Provider(
+          (window as any).ethereum
+        );
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(nftAddress, nftABI, signer);
+        const mintedByUser = await contract.nftMinted(address);
+        const numMintedByUser = Number(mintedByUser);
+        if (numMintedByUser == 0) {
+          setNewUser(true);
+        }
+      };
+      price();
+    }
+  }, [isConnected, address]);
 
   const handleAddition = () => {
     if (count < 8) {
@@ -42,10 +104,67 @@ export default function Mint() {
   };
 
   const handleSubtraction = () => {
-    if (count > 0) {
+    if (count > 1) {
       setCount(() => count - 1);
     }
   };
+
+  const handleMint = async () => {
+    setMinting(true);
+
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).ethereum
+    );
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(nftAddress, nftABI, signer);
+    try {
+      let cost;
+      const mintPrice = await contract.MINT_PRICE();
+      const freeMint = await contract.FREE_MINT();
+      const mintedByUser = await contract.nftMinted(address);
+      const numMintedByUser = Number(mintedByUser);
+      const numFreeMint = Number(freeMint);
+      const numMintPrice = Number(mintPrice);
+
+      if (numMintedByUser == 0 && numFreeMint > 0) {
+        cost = count * numMintPrice;
+        cost = cost - numMintPrice;
+      } else {
+        cost = count * numMintPrice;
+      }
+      console.log(cost);
+
+      const tx = await contract.mint(count, {
+        value: BigNumber.from(cost.toString()),
+      });
+      const wait = await provider.waitForTransaction(tx.hash);
+      setNewUser(false);
+      toast.success(`You have successfully minted ${count} FEPE(s)`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setMinting(false);
+    } catch (error: any) {
+      toast.error(error.reason, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setMinting(false);
+    }
+  };
+
   return (
     <>
       <ToastContainer
@@ -134,11 +253,34 @@ export default function Mint() {
                               />
                             </div>
                             <div className="text-4xl md:text-5xl">
-                              Price: {0.005 * count} ETH
+                              Price:{" "}
+                              {newUser
+                                ? newUserPrices.get(count)
+                                : normalPrices.get(count)}{" "}
+                              ETH
                             </div>
-                            <button className="text-4xl md:text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg my-4">
-                              MINT
+                            <div className="text-4xl md:text-5xl">
+                              Minted: {totalMinted} / 10 000
+                            </div>
+
+                            {/* <button
+                              onClick={() => handleMint()}
+                              className="text-4xl md:text-5xl bg-[#7EB14A] py-1 rounded-lg my-4 w-32"
+                              type="button"
+                            >
+                              Mint
                             </button>
+                            <br /> */}
+
+                            <button
+                              onClick={() => handleMint()}
+                              className="text-4xl md:text-5xl bg-[#7EB14A] w-32 py-1 rounded-lg my-4"
+                              disabled={minting}
+                              type="button"
+                            >
+                              {minting ? "Minting..." : "Mint"}
+                            </button>
+
                             <div className="flex justify-center mt-5">
                               <button
                                 onClick={openAccountModal}
