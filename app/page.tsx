@@ -1,8 +1,12 @@
-import Mint from "@/components/Mint/Mint";
+// import Mint from "@/components/Mint/Mint";
+import dynamic from "next/dynamic";
+const Mint = dynamic(() => import("@/components/Mint/Mint"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
-    <main className=" min-h-screen flex-col items-center justify-center bg-pepe bg-[url('../public/assets/bg_mobile.jpg')] xl:bg-[url('../public/assets/bg.png')] bg-cover bg-no-repeat bg-center">
+    <main className=" min-h-screen flex-col items-center justify-center bg-pepe bg-[url('../public/assets/bg_mobile.jpg')] xl:bg-[url('../public/assets/HD.png')] bg-cover bg-no-repeat bg-center">
       <div className="min-w-[260px] xl:min-w-[380px] flex flex-col min-h-screen items-center justify-center">
         <div
           id="content"

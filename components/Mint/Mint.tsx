@@ -43,26 +43,15 @@ export default function Mint() {
   const [newUser, setNewUser] = useState(false);
   const { address, isConnected } = useAccount();
 
-  let newUserPrices = new Map([
+  let normalPrices = new Map([
     [1, "0"],
     [2, "0.005"],
-    [3, "0.010"],
-    [4, "0.015"],
-    [5, "0.020"],
-    [6, "0.025"],
-    [7, "0.030"],
-    [8, "0.035"],
-  ]);
-
-  let normalPrices = new Map([
-    [1, "0.005"],
-    [2, "0.010"],
-    [3, "0.015"],
-    [4, "0.020"],
-    [5, "0.025"],
-    [6, "0.030"],
-    [7, "0.035"],
-    [8, "0.040"],
+    [3, "0.005"],
+    [4, "0.01"],
+    [5, "0.01"],
+    [6, "0.015"],
+    [7, "0.015"],
+    [8, "0.02"],
   ]);
 
   useEffect(() => {
@@ -120,19 +109,23 @@ export default function Mint() {
     try {
       let cost;
       const mintPrice = await contract.MINT_PRICE();
-      const freeMint = await contract.FREE_MINT();
       const mintedByUser = await contract.nftMinted(address);
-      const numMintedByUser = Number(mintedByUser);
-      const numFreeMint = Number(freeMint);
+      let numMintedByUser = Number(mintedByUser);
       const numMintPrice = Number(mintPrice);
+      let freeCount = 0;
+      let paidCount = 0;
 
-      if (numMintedByUser == 0 && numFreeMint > 0) {
-        cost = count * numMintPrice;
-        cost = cost - numMintPrice;
-      } else {
-        cost = count * numMintPrice;
+      for (let i = 0; i < count; i++) {
+        if (numMintedByUser % 2 == 0) {
+          freeCount++;
+          numMintedByUser++;
+        } else if (numMintedByUser % 1 == 0) {
+          paidCount++;
+          numMintedByUser++;
+        }
       }
-      console.log(cost);
+
+      cost = freeCount * 0 + paidCount * numMintPrice;
 
       const tx = await contract.mint(count, {
         value: BigNumber.from(cost.toString()),
@@ -183,7 +176,9 @@ export default function Mint() {
       <div id="subtitles" className="text-center card-blur">
         <div
           id="connect"
-          className="flex flex-col justify-center p-5 text-white"
+          className={`flex flex-col justify-center ${
+            isConnected && "p-5"
+          } text-white`}
         >
           <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider chains={chains}>
@@ -256,11 +251,7 @@ export default function Mint() {
                               />
                             </div>
                             <div className="text-4xl md:text-5xl">
-                              Price:{" "}
-                              {newUser
-                                ? newUserPrices.get(count)
-                                : normalPrices.get(count)}{" "}
-                              ETH
+                              Price: {normalPrices.get(count)} ETH
                             </div>
                             <div className="text-4xl md:text-5xl">
                               Minted: {totalMinted} / 10 000
