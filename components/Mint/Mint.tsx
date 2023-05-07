@@ -277,14 +277,14 @@ export default function Mint() {
 
                             <button
                               onClick={() => handleMint()}
-                              className="text-4xl md:text-5xl bg-[#7EB14A] w-32 py-1 rounded-lg my-4"
+                              className="text-4xl md:text-5xl bg-[#7EB14A] w-32 py-1 rounded-lg mt-4"
                               disabled={minting}
                               type="button"
                             >
                               {minting ? "Minting..." : "Mint"}
                             </button>
 
-                            <div className="flex justify-end mt-5">
+                            <div className="flex justify-end mt-4">
                               <button
                                 onClick={openAccountModal}
                                 style={{
@@ -297,8 +297,8 @@ export default function Mint() {
                                   <div
                                     style={{
                                       background: chain.iconBackground,
-                                      width: 24,
-                                      height: 24,
+                                      width: 32,
+                                      height: 32,
                                       borderRadius: 999,
                                       overflow: "hidden",
                                       marginRight: 4,
@@ -308,7 +308,7 @@ export default function Mint() {
                                       <img
                                         alt={chain.name ?? "Chain icon"}
                                         src={chain.iconUrl}
-                                        style={{ width: 24, height: 24 }}
+                                        style={{ width: 32, height: 32 }}
                                       />
                                     )}
                                   </div>
