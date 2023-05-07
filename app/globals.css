@@ -65,3 +65,11 @@
 body {
   font-family: "Pepe", Arial, Helvetica, sans-serif;
 }
+
+.card-blur {
+  backdrop-filter: blur(2px) saturate(180%);
+  -webkit-backdrop-filter: blur(2px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.517);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+}

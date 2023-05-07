@@ -180,8 +180,11 @@ export default function Mint() {
         theme="light"
       />
 
-      <div id="subtitles" className="mt-4 text-center">
-        <div id="connect" className="mt-5 flex justify-center">
+      <div id="subtitles" className="text-center card-blur">
+        <div
+          id="connect"
+          className="flex flex-col justify-center p-5 text-white"
+        >
           <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider chains={chains}>
               <ConnectButton.Custom>
@@ -281,7 +284,7 @@ export default function Mint() {
                               {minting ? "Minting..." : "Mint"}
                             </button>
 
-                            <div className="flex justify-center mt-5">
+                            <div className="flex justify-end mt-5">
                               <button
                                 onClick={openAccountModal}
                                 style={{
