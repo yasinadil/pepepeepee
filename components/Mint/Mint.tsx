@@ -215,13 +215,27 @@ export default function Mint() {
                       {(() => {
                         if (!connected) {
                           return (
-                            <button
-                              className="text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg"
-                              onClick={openConnectModal}
-                              type="button"
-                            >
-                              Connect Wallet
-                            </button>
+                            // <div className="animate-ping">
+                            //   <button
+                            //     className="text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg"
+                            //     onClick={openConnectModal}
+                            //     type="button"
+                            //   >
+                            //     Connect Wallet
+                            //   </button>
+                            // </div>
+                            <span className="relative flex ">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-2xl bg-green-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-2xl bg-green-500 text-5xl">
+                                <button
+                                  className="text-5xl bg-[#7EB14A] px-4 py-1 rounded-2xl"
+                                  onClick={openConnectModal}
+                                  type="button"
+                                >
+                                  Connect Wallet
+                                </button>
+                              </span>
+                            </span>
                           );
                         }
                         if (chain.unsupported) {
