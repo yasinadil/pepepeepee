@@ -6,6 +6,10 @@
   font-family: "Pepe";
   src: url("../public/assets/Heyho-Regular.ttf.otf");
 }
+@font-face {
+  font-family: "IntroRust";
+  src: url("../public/assets/IntroRust-Base.otf");
+}
 
 .bg-pepe {
   --tw-bg-opacity: 1;
@@ -57,6 +61,12 @@
 
 body {
   font-family: "Pepe", Arial, Helvetica, sans-serif;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    font-family: "IntroRust", Arial, Helvetica, sans-serif;
+  }
 }
 
 .card-blur {

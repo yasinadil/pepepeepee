@@ -173,7 +173,10 @@ export default function Mint() {
         theme="light"
       />
 
-      <div id="subtitles" className="text-center card-blur">
+      <div
+        id="subtitles"
+        className={`text-center ${isConnected && "card-blur"}`}
+      >
         <div
           id="connect"
           className={`flex flex-col justify-center ${
@@ -215,27 +218,27 @@ export default function Mint() {
                       {(() => {
                         if (!connected) {
                           return (
-                            // <div className="animate-ping">
-                            //   <button
-                            //     className="text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg"
-                            //     onClick={openConnectModal}
-                            //     type="button"
-                            //   >
-                            //     Connect Wallet
-                            //   </button>
-                            // </div>
-                            <span className="relative flex ">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-2xl bg-green-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-2xl bg-green-500 text-5xl">
-                                <button
-                                  className="text-5xl bg-[#7EB14A] px-4 py-1 rounded-2xl"
-                                  onClick={openConnectModal}
-                                  type="button"
-                                >
-                                  Connect Wallet
-                                </button>
-                              </span>
-                            </span>
+                            <div className="animate-bounce">
+                              <button
+                                className="text-3xl md:text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg"
+                                onClick={openConnectModal}
+                                type="button"
+                              >
+                                Connect Wallet
+                              </button>
+                            </div>
+                            // <span className="relative flex ">
+                            //   <span className="animate-ping absolute inline-flex h-full w-full rounded-2xl bg-green-400 opacity-75"></span>
+                            //   <span className="relative inline-flex rounded-2xl bg-green-500 text-5xl">
+                            //     <button
+                            //       className="text-5xl bg-[#7EB14A] px-4 py-1 rounded-2xl"
+                            //       onClick={openConnectModal}
+                            //       type="button"
+                            //     >
+                            //       Connect Wallet
+                            //     </button>
+                            //   </span>
+                            // </span>
                           );
                         }
                         if (chain.unsupported) {
@@ -257,18 +260,22 @@ export default function Mint() {
                                 className="cursor-pointer text-[#7EB14A]"
                                 fontSize="large"
                               />
-                              <h1 className="text-5xl w-12">{count}</h1>
+                              <h1 className="text-2xl md:text-5xl w-12">
+                                {count}
+                              </h1>
                               <AddBoxIcon
                                 onClick={handleAddition}
                                 className="cursor-pointer text-[#7EB14A]"
                                 fontSize="large"
                               />
                             </div>
-                            <div className="text-4xl md:text-5xl">
-                              Price: {normalPrices.get(count)} ETH
-                            </div>
-                            <div className="text-4xl md:text-5xl">
-                              Minted: {totalMinted} / 10 000
+                            <div className="my-3">
+                              <div className="text-3xl md:text-5xl">
+                                Price: {normalPrices.get(count)} ETH
+                              </div>
+                              <div className="text-3xl md:text-5xl">
+                                Minted: {totalMinted} / 10 000
+                              </div>
                             </div>
 
                             {/* <button
@@ -282,7 +289,7 @@ export default function Mint() {
 
                             <button
                               onClick={() => handleMint()}
-                              className="text-4xl md:text-5xl bg-[#7EB14A] w-32 py-1 rounded-lg mt-4"
+                              className="text-3xl md:text-5xl bg-[#7EB14A] w-48 py-1 rounded-lg mt-4"
                               disabled={minting}
                               type="button"
                             >
