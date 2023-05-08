@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
@@ -13,7 +12,7 @@ import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { ethers, BigNumber } from "ethers";
 import { nftAddress } from "../Config/Config";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 const nftABI = require("../ABI/nftABI.json");
 
 const { chains, provider } = configureChains(
@@ -40,8 +39,8 @@ export default function Mint() {
   const [count, setCount] = useState(1);
   const [totalMinted, setTotalMinted] = useState("0");
   const [minting, setMinting] = useState(false);
-  const [newUser, setNewUser] = useState(false);
   const { address, isConnected } = useAccount();
+  const { chain, chains } = useNetwork();
 
   let normalPrices = new Map([
     [1, "0"],
@@ -63,35 +62,33 @@ export default function Mint() {
 
   useEffect(() => {
     const load = async () => {
-      const provider = new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_ALCHEMY_LINK!
-      );
-      let contract = new ethers.Contract(nftAddress, nftABI, provider);
+      try {
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_ALCHEMY_LINK!
+        );
+        let contract = new ethers.Contract(nftAddress, nftABI, provider);
 
-      let Minted = await contract.totalSupply();
-      let total = Number(Minted);
-      setTotalMinted(total.toString());
+        let Minted = await contract.totalSupply();
+        let total = Number(Minted);
+        setTotalMinted(total.toString());
+      } catch (error) {
+        console.log(error);
+
+        toast.error("Switch Networks", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
     };
+
     load();
   }, []);
-
-  useEffect(() => {
-    if (isConnected && address) {
-      const price = async () => {
-        const provider = new ethers.providers.Web3Provider(
-          (window as any).ethereum
-        );
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(nftAddress, nftABI, signer);
-        const mintedByUser = await contract.nftMinted(address);
-        const numMintedByUser = Number(mintedByUser);
-        if (numMintedByUser == 0) {
-          setNewUser(true);
-        }
-      };
-      price();
-    }
-  }, [isConnected, address]);
 
   const handleAddition = () => {
     if (count < 15) {
@@ -138,7 +135,7 @@ export default function Mint() {
         value: BigNumber.from(cost.toString()),
       });
       const wait = await provider.waitForTransaction(tx.hash);
-      setNewUser(false);
+
       toast.success(`You have successfully minted ${count} FEPE(s)`, {
         position: "top-right",
         autoClose: 5000,
@@ -180,14 +177,10 @@ export default function Mint() {
         theme="light"
       />
 
-      <div
-        id="subtitles"
-        className={`text-center ${isConnected && "card-blur"}`}
-      >
+      <div id="subtitles" className="text-center">
         <div
           id="connect"
-          className={`flex flex-col justify-center ${
-            isConnected && "p-5"
+          className={`flex flex-col justify-center
           } text-white`}
         >
           <WagmiConfig client={wagmiClient}>
@@ -250,17 +243,19 @@ export default function Mint() {
                         }
                         if (chain.unsupported) {
                           return (
-                            <button
-                              className="text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg"
-                              onClick={openChainModal}
-                              type="button"
-                            >
-                              Switch Network
-                            </button>
+                            <div className="animate-bounce">
+                              <button
+                                className="text-3xl md:text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg"
+                                onClick={openChainModal}
+                                type="button"
+                              >
+                                Switch Network
+                              </button>
+                            </div>
                           );
                         }
                         return (
-                          <div>
+                          <div className="card-blur p-5">
                             <div className="flex gap-x-4 justify-center items-center">
                               <IndeterminateCheckBoxIcon
                                 onClick={handleSubtraction}
