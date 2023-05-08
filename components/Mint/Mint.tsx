@@ -61,34 +61,19 @@ export default function Mint() {
   ]);
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const provider = new ethers.providers.JsonRpcProvider(
-          process.env.NEXT_PUBLIC_ALCHEMY_LINK!
-        );
-        let contract = new ethers.Contract(nftAddress, nftABI, provider);
-
-        let Minted = await contract.totalSupply();
-        let total = Number(Minted);
-        setTotalMinted(total.toString());
-      } catch (error) {
-        console.log(error);
-
-        toast.error("Switch Networks", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-    };
-
     load();
   }, []);
+
+  const load = async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      process.env.NEXT_PUBLIC_ALCHEMY_LINK!
+    );
+    let contract = new ethers.Contract(nftAddress, nftABI, provider);
+
+    let Minted = await contract.totalSupply();
+    let total = Number(Minted);
+    setTotalMinted(total.toString());
+  };
 
   const handleAddition = () => {
     if (count < 15) {
@@ -147,6 +132,7 @@ export default function Mint() {
         theme: "light",
       });
       setMinting(false);
+      await load();
     } catch (error: any) {
       toast.error(error.reason, {
         position: "top-right",
