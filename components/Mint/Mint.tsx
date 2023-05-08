@@ -47,11 +47,18 @@ export default function Mint() {
     [1, "0"],
     [2, "0.005"],
     [3, "0.005"],
-    [4, "0.01"],
-    [5, "0.01"],
+    [4, "0.010"],
+    [5, "0.010"],
     [6, "0.015"],
     [7, "0.015"],
-    [8, "0.02"],
+    [8, "0.020"],
+    [9, "0.020"],
+    [10, "0.025"],
+    [11, "0.025"],
+    [12, "0.030"],
+    [13, "0.030"],
+    [14, "0.035"],
+    [15, "0.035"],
   ]);
 
   useEffect(() => {
@@ -87,7 +94,7 @@ export default function Mint() {
   }, [isConnected, address]);
 
   const handleAddition = () => {
-    if (count < 8) {
+    if (count < 15) {
       setCount(() => count + 1);
     }
   };
@@ -277,15 +284,6 @@ export default function Mint() {
                                 Minted: {totalMinted} / 10 000
                               </div>
                             </div>
-
-                            {/* <button
-                              onClick={() => handleMint()}
-                              className="text-4xl md:text-5xl bg-[#7EB14A] py-1 rounded-lg my-4 w-32"
-                              type="button"
-                            >
-                              Mint
-                            </button>
-                            <br /> */}
 
                             <button
                               onClick={() => handleMint()}
