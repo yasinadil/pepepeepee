@@ -37,6 +37,7 @@ import { useEffect, useState } from "react";
 
 export default function Mint() {
   const [count, setCount] = useState(1);
+  const [mintedAlready, setMintedAlready] = useState(0);
   const [totalMinted, setTotalMinted] = useState("0");
   const [minting, setMinting] = useState(false);
   const { address, isConnected } = useAccount();
@@ -62,7 +63,10 @@ export default function Mint() {
 
   useEffect(() => {
     load();
-  }, []);
+    if (isConnected && address) {
+      getAlreadyMinted();
+    }
+  }, [address, isConnected]);
 
   const load = async () => {
     const provider = new ethers.providers.JsonRpcProvider(
@@ -73,6 +77,17 @@ export default function Mint() {
     let Minted = await contract.totalSupply();
     let total = Number(Minted);
     setTotalMinted(total.toString());
+  };
+
+  const getAlreadyMinted = async () => {
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).ethereum
+    );
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(nftAddress, nftABI, signer);
+    const mintedByUser = await contract.nftMinted(address);
+    let numMintedByUser = Number(mintedByUser);
+    setMintedAlready(numMintedByUser);
   };
 
   const handleAddition = () => {
@@ -259,7 +274,15 @@ export default function Mint() {
                             </div>
                             <div className="my-3">
                               <div className="text-3xl md:text-5xl">
-                                Price: {normalPrices.get(count)} ETH
+                                {normalPrices.get(count + mintedAlready) &&
+                                  "Price: "}
+                                {!normalPrices.get(count + mintedAlready)
+                                  ? "Limit Exceeded"
+                                  : normalPrices.get(
+                                      count + mintedAlready
+                                    )}{" "}
+                                {normalPrices.get(count + mintedAlready) &&
+                                  "ETH"}
                               </div>
                               <div className="text-3xl md:text-5xl">
                                 Minted: {totalMinted} / 10 000
