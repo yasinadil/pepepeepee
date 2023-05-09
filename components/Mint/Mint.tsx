@@ -63,7 +63,7 @@ export default function Mint() {
 
   useEffect(() => {
     load();
-    if (isConnected && address) {
+    if (isConnected && address && chain?.id == polygonMumbai.id) {
       getAlreadyMinted();
     }
   }, [address, isConnected]);
@@ -163,6 +163,19 @@ export default function Mint() {
     }
   };
 
+  const testnetMint = () => {
+    toast.info("Stay tuned!", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
   return (
     <>
       <ToastContainer
@@ -222,7 +235,8 @@ export default function Mint() {
                             <div className="animate-bounce">
                               <button
                                 className="text-3xl md:text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg"
-                                onClick={openConnectModal}
+                                onClick={testnetMint}
+                                // onClick={openConnectModal}
                                 type="button"
                               >
                                 Connect Wallet
