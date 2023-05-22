@@ -358,9 +358,9 @@ export default function Mint() {
                       {/* The button to open modal */}
                       <label
                         htmlFor="my-modal-3"
-                        className="text-2xl md:text-4xl bg-[#7EB14A] w-56 md:w-60 py-1 rounded-lg absolute bottom-5 left-[50%] translate-x-[-50%]"
+                        className="text-2xl md:text-4xl bg-[#7EB14A] w-56 md:w-60 py-1 rounded-lg absolute top-5 right-5"
                       >
-                        Our Campaign
+                        FEPE TIMES
                       </label>
 
                       {/* Put this part before </body> tag */}
