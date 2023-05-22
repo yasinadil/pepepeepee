@@ -3,8 +3,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { polygonMumbai } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
+import { pulsechain } from "wagmi/chains";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { metaMaskWallet } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -13,11 +13,17 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { ethers, BigNumber } from "ethers";
 import { nftAddress } from "../Config/Config";
 import { useAccount, useNetwork } from "wagmi";
+import campaign from "../../public/assets/campaign.png";
+import Image from "next/image";
 const nftABI = require("../ABI/nftABI.json");
 
 const { chains, provider } = configureChains(
-  [polygonMumbai],
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_API_KEY! })]
+  [pulsechain],
+  [
+    jsonRpcProvider({
+      rpc: (chain) => ({ http: "https://rpc.pulsechain.com" }),
+    }),
+  ]
 );
 
 const connectors = connectorsForWallets([
@@ -45,32 +51,32 @@ export default function Mint() {
 
   let normalPrices = new Map([
     [1, "0"],
-    [2, "0.005"],
-    [3, "0.005"],
-    [4, "0.010"],
-    [5, "0.010"],
-    [6, "0.015"],
-    [7, "0.015"],
-    [8, "0.020"],
-    [9, "0.020"],
-    [10, "0.025"],
-    [11, "0.025"],
-    [12, "0.030"],
-    [13, "0.030"],
-    [14, "0.035"],
-    [15, "0.035"],
+    [2, "68k"],
+    [3, "68k"],
+    [4, "136k"],
+    [5, "136k"],
+    [6, "204k"],
+    [7, "204k"],
+    [8, "272k"],
+    [9, "272k"],
+    [10, "340k"],
+    [11, "340k"],
+    [12, "408k"],
+    [13, "408k"],
+    [14, "476k"],
+    [15, "476k"],
   ]);
 
   useEffect(() => {
     load();
-    if (isConnected && address && chain?.id == polygonMumbai.id) {
+    if (isConnected && address && chain?.id == pulsechain.id) {
       getAlreadyMinted();
     }
   }, [address, isConnected]);
 
   const load = async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.NEXT_PUBLIC_ALCHEMY_LINK!
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).ethereum
     );
     let contract = new ethers.Contract(nftAddress, nftABI, provider);
 
@@ -113,6 +119,8 @@ export default function Mint() {
     try {
       let cost;
       const mintPrice = await contract.MINT_PRICE();
+      console.log(mintPrice.toString());
+
       const mintedByUser = await contract.nftMinted(address);
       let numMintedByUser = Number(mintedByUser);
       const numMintPrice = Number(mintPrice);
@@ -296,7 +304,7 @@ export default function Mint() {
                                       count + mintedAlready
                                     )}{" "}
                                 {normalPrices.get(count + mintedAlready) &&
-                                  "ETH"}
+                                  "PLS"}
                               </div>
                               <div className="text-3xl md:text-5xl">
                                 Minted: {totalMinted} / 10 000
@@ -347,6 +355,31 @@ export default function Mint() {
                           </div>
                         );
                       })()}
+                      {/* The button to open modal */}
+                      <label
+                        htmlFor="my-modal-3"
+                        className="text-2xl md:text-4xl bg-[#7EB14A] w-56 md:w-60 py-1 rounded-lg absolute bottom-5 left-[50%] translate-x-[-50%]"
+                      >
+                        Our Campaign
+                      </label>
+
+                      {/* Put this part before </body> tag */}
+                      <input
+                        type="checkbox"
+                        id="my-modal-3"
+                        className="modal-toggle"
+                      />
+                      <div className="modal">
+                        <div className="modal-box relative">
+                          <label
+                            htmlFor="my-modal-3"
+                            className="btn btn-sm btn-circle absolute right-2 top-2"
+                          >
+                            ✕
+                          </label>
+                          <Image src={campaign} alt="campaign" />
+                        </div>
+                      </div>
                     </div>
                   );
                 }}
