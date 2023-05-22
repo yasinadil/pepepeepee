@@ -14,6 +14,7 @@ import { ethers, BigNumber } from "ethers";
 import { nftAddress } from "../Config/Config";
 import { useAccount, useNetwork } from "wagmi";
 import campaign from "../../public/assets/campaign.png";
+import telegram from "../../public/assets/telegram.png";
 import Image from "next/image";
 const nftABI = require("../ABI/nftABI.json");
 
@@ -40,6 +41,7 @@ const wagmiClient = createClient({
 });
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Mint() {
   const [count, setCount] = useState(1);
@@ -355,15 +357,30 @@ export default function Mint() {
                           </div>
                         );
                       })()}
-                      {/* The button to open modal */}
-                      <label
-                        htmlFor="my-modal-3"
-                        className="text-2xl md:text-4xl bg-[#7EB14A] w-56 md:w-60 py-1 rounded-lg absolute top-5 right-5"
-                      >
-                        FEPE TIMES
-                      </label>
+                      <div className="absolute bottom-5 right-5 block md:hidden">
+                        <Link
+                          target="_blank"
+                          href={"https://t.me/fepeslol"}
+                          className="text-3xl md:text-5xl bg-[#7EB14A] rounded-lg"
+                        >
+                          <Image
+                            className="w-12 bg-white rounded-full"
+                            src={telegram}
+                            alt="telegram"
+                          />
+                        </Link>
+                      </div>
+                      <div className="absolute top-5 left-[50%] translate-x-[-50%] block md:hidden">
+                        {/* The button to open modal */}
+                        <label
+                          htmlFor="my-modal-3"
+                          className="text-2xl md:text-5xl bg-[#7EB14A] px-2 py-1 rounded-lg "
+                        >
+                          FEPE TIMES
+                        </label>
 
-                      {/* Put this part before </body> tag */}
+                        {/* Put this part before </body> tag */}
+                      </div>
                       <input
                         type="checkbox"
                         id="my-modal-3"
@@ -378,6 +395,25 @@ export default function Mint() {
                             ✕
                           </label>
                           <Image src={campaign} alt="campaign" />
+                        </div>
+                      </div>
+                      <div className="absolute top-5 right-5 hidden md:block">
+                        <div className="flex flex-row gap-x-4">
+                          <Link
+                            href={"https://t.me/fepeslol"}
+                            target="_blank"
+                            className="text-3xl md:text-5xl bg-[#7EB14A] w-48 py-1 rounded-lg"
+                          >
+                            Telegram
+                          </Link>
+
+                          {/* The button to open modal */}
+                          <label
+                            htmlFor="my-modal-3"
+                            className="text-3xl md:text-5xl bg-[#7EB14A] w-56 md:w-60 py-1 rounded-lg "
+                          >
+                            FEPE TIMES
+                          </label>
                         </div>
                       </div>
                     </div>
