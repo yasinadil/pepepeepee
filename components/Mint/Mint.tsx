@@ -245,8 +245,8 @@ export default function Mint() {
                             <div className="animate-bounce">
                               <button
                                 className="text-3xl md:text-5xl bg-[#7EB14A] px-4 py-1 rounded-lg"
-                                onClick={testnetMint}
-                                // onClick={openConnectModal}
+                                // onClick={testnetMint}
+                                onClick={openConnectModal}
                                 type="button"
                               >
                                 Connect Wallet
